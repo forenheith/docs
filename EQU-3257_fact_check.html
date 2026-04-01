@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EQU-3257 Fact Report</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card: #fff;
+      --text: #172b4d;
+      --muted: #6b778c;
+      --line: #dfe1e6;
+      --ok: #36b37e;
+      --nfc: #ffab00;
+      --no: #ff5630;
+      --ask: #4c9aff;
+    }
+    body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+    .wrap { max-width:1200px; margin:24px auto; padding:0 16px 32px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:8px; box-shadow:0 1px 2px rgba(9,30,66,.08); margin-bottom:16px; overflow:hidden; }
+    .head { padding:16px 20px; border-bottom:1px solid var(--line); background:linear-gradient(180deg,#fff,#fafbfc); }
+    .body { padding:16px 20px; }
+    h1,h2 { margin:0; }
+    h1 { font-size:22px; }
+    h2 { font-size:18px; }
+    .meta { margin-top:8px; color:var(--muted); font-size:12px; }
+    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+    .kpi { border:1px solid var(--line); border-radius:6px; padding:10px 12px; }
+    .kpi .l { color:var(--muted); font-size:12px; }
+    .kpi .v { font-size:20px; font-weight:700; margin-top:2px; }
+    .small { color:var(--muted); font-size:12px; }
+    .info-warning { border:1px solid #ffab00; background:#fff7e6; border-radius:8px; padding:12px 14px; }
+    .info-warning .title { font-weight:700; color:#172b4d; margin-bottom:6px; }
+    .info-warning .icon { color:#ff8b00; margin-right:6px; }
+
+    table { width:100%; border-collapse:collapse; table-layout:fixed; }
+    th,td { border:1px solid var(--line); padding:10px; vertical-align:top; }
+    th { background:#f7f8fa; text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.02em; }
+    td.status-cell { text-align: center; vertical-align: middle; padding-left: 8px; padding-right: 8px; }
+    .status-wrap { display:flex; align-items:center; justify-content:center; width:100%; padding:0 8px; box-sizing:border-box; }
+    .quote { font-style:italic; color:#253858; white-space:pre-line; }
+
+    .badge { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 236px; min-height: 28px; line-height: 1; padding: 4px 10px; border-radius: 999px; font-weight: 700; font-size: 11px; white-space: nowrap; }
+    .b-ok { background:var(--ok); }
+    .b-nfc { background:var(--nfc); color:#172b4d; }
+    .b-no { background:var(--no); }
+    .b-ask { background:var(--ask); }
+
+    ul,ol { margin:6px 0 0 18px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="head">
+      <h1>EQU-3257 — Requirement-by-Requirement Fact Report</h1>
+      <div class="meta">Prepared: 2026-04-01 | Production telemetry window: last 14 days | Current DB snapshot included</div>
+    </div>
+    <div class="body">
+      <div class="kpis">
+        <div class="kpi"><div class="l">Auth-related requests (14d)</div><div class="v">581,245</div><div class="small">Failed: 1,771 (0.305%)</div></div>
+        <div class="kpi"><div class="l">Payment-related requests (14d)</div><div class="v">242,613</div><div class="small">Failed: 4,026 (1.659%)</div></div>
+        <div class="kpi"><div class="l">Token refresh failed events (14d)</div><div class="v">309</div><div class="small">Primarily expected when refresh token is expired; track trend, not as standalone incident signal</div></div>
+        <div class="kpi"><div class="l">"password expired" exceptions (14d)</div><div class="v">0</div><div class="small">No direct production exception spike</div></div>
+        <div class="kpi"><div class="l">Duplicate email groups (DB)</div><div class="v">9,169</div><div class="small">Users in duplicate-email groups: 19,456</div></div>
+        <div class="kpi"><div class="l">Legacy clear-text password footprint</div><div class="v">607,412</div><div class="small">of 613,977 users have CP_password populated</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head"><h2>Status Legend</h2></div>
+    <div class="body">
+      <span class="badge b-ok">Already Implemented</span>
+      <span class="badge b-nfc">Not Fully Covered</span>
+      <span class="badge b-no">Not Implemented</span>
+      <span class="badge b-ask">Clarification Required</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="body">
+      <div class="info-warning">
+        <div class="title"><span class="icon">&#9888;</span>Critical Process Note (about EQU-3057 scope)</div>
+        <div>EQU-3057 appears over-expanded and carries too much mixed responsibility for a single Jira item. Its lifecycle and current breadth indicate scope was formed too broadly and now mixes progress tracking with ongoing discovery/planning.</div>
+        <div>Jira task flow should primarily track execution progress, while broad cross-topic analysis should be handled in dedicated planning discussions, then split into concrete epics and scoped implementation tasks.</div>
+        <div>Current pattern creates an "epic inside epic" effect, where sub-threads evolve into standalone epics inside the same parent thread. This reduces planning clarity, makes ownership diffuse, and increases delivery-tracking complexity.</div>
+        <div>Recommended governance: close/scope EQU-3057 around concrete deliverables only, and move newly discovered broad tracks into separate epics with explicit estimates, owners, and release targets.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head"><h2>Requirement Matrix (Quote → Footnote)</h2></div>
+    <div class="body">
+      <table>
+        <colgroup><col style="width:37%"><col style="width:15%"><col style="width:30%"><col style="width:18%"></colgroup>
+        <thead>
+          <tr><th>Quoted Requirement (EQU-3257)</th><th>Status</th><th>Fact Check</th><th>Clarification Needed</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="quote">"Log in easily"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>Production usage is high and stable: LoginPage + SmartLogin = 541,577 requests in 14 days, low aggregate failure rates.</td>
+            <td>Implemented and operating in production; please clarify only if this requirement was intended to mean a different scope or behavior.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Understand why login fails"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>User-facing failure messaging is present and login flows are in stable long-term operation.</td>
+            <td>If additional messaging is requested, specify exact scenarios and expected wording.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Reset passwords without friction"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>Forgot/Reset flows are active and stable: ForgotPassword 33,170 requests (0.124% failed), ResetPassword 6,492 requests (0.015% failed), last 14 days.</td>
+            <td>If this area still needs change, specify exact user path that is considered problematic.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Clearly see when a password has expired and what to do next"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>Expiry handling exists and is used in production; no direct "password expired" exception spike detected in last 14 days.</td>
+            <td>If changes are still expected, specify concrete UX problem and target behavior.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Complete transactions without unexpected session loss"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Payment flow is high-volume (242,613 requests / 14 days). This item needs incident-anchored RCA rather than broad assumptions.</td>
+            <td>Provide reproducible case(s): timestamp, provider, old/new SB path, expected vs actual result.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Remove any clear text password handling"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-no">Not Implemented</span></div></td>
+            <td>Current DB snapshot still shows major legacy clear-text footprint: 607,412 users with CP_password populated out of 613,977 total. If plain-text password storage/usage is removed, current impersonation/login-as-user scenarios will be impacted and will not work in current form without a dedicated redesign/re-architecture scope.</td>
+            <td>No clarification required; this is a concrete open item.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Align with modern authentication best practice"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-nfc">Not Fully Covered</span></div></td>
+            <td>Modernization is active (passkey tracks), but full rollout is not complete yet.</td>
+            <td>Confirm whether EQU-3257 expects recommendation only or full rollout commitment.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Ensure data isolation and session integrity"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-nfc">Not Fully Covered</span></div></td>
+            <td>No direct "session expired" exception spike by keyword, but story still requests focused session/payment investigation.</td>
+            <td>Define measurable acceptance criteria for this item.</td>
+          </tr>
+
+          <tr>
+            <td class="quote">"Duplicate email addresses across accounts cause reset emails to fail"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-nfc">Not Fully Covered</span></div></td>
+            <td>Duplicate data remains significant: 9,169 duplicate email groups / 19,456 users in those groups. Also, duplicate-remediation work is already tracked and partially delivered (EQU-3061, note: part released in 19.5; remaining part planned later). A concrete implementation plan is explicitly referenced in EQU-3061 and related planning materials.</td>
+            <td>Problem statement is confirmed. Clarification needed only for final policy decisions (merge/archive/restrict timings and enforcement cutover).</td>
+          </tr>
+          <tr>
+            <td class="quote">"Should duplicate emails be prevented at account level?"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-nfc">Not Fully Covered</span></div></td>
+            <td>Prevention exists in application flows, and there is an active phased plan for broader enforcement/cleanup in EQU-3061. Global DB-level uniqueness is intentionally not hard-enforced yet to avoid blocking valid business flows before cleanup.</td>
+            <td>Confirm enforcement checkpoint date after cleanup window, as already discussed in EQU-3061 planning comments.</td>
+          </tr>
+          <tr>
+            <td class="quote">"How should we handle existing duplicates?"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Technical duplicate detection is largely implemented across existing flows, with known exceptions explicitly listed in the EQU-3061 plan; product decision for merge/archive/restrict/link is still required.</td>
+            <td>Confirm approved business process and conflict-resolution rules.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Would passkeys / passwordless login improve this?"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Yes, passkey improves user experience: faster sign-in, no need to remember passwords, reduced password-theft anxiety, and in many cases fewer login-friction points (including captcha-related friction in password-based flows). It is an additive sign-in option and does not replace existing password login by itself.</td>
+            <td>Clarify rollout scope and priority: which user groups/flows should receive passkey first.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Should we introduce email verification enforcement?"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>No finalized global enforcement policy is confirmed as complete in this story scope.</td>
+            <td>Confirm desired policy and rollout scope.</td>
+          </tr>
+
+          <tr>
+            <td class="quote">"Outcome required: Root cause analysis + recommendation to prevent transaction disruption"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Based on the current wording, clarification is required on the scope of "prevent transaction disruption": app-defect failures can be prevented/fixed, while third-party or infrastructure failures cannot be fully prevented and should be handled via detection, classification, and clear temporary-failure messaging. In the current 14-day telemetry window, no standalone spike confirms a systemic app-defect-only transaction failure pattern.</td>
+            <td>Please confirm expected scope: app-caused failures only, or all failures including external-provider/infrastructure incidents. If all, confirm that expected output is mitigation/handling strategy, not absolute prevention.</td>
+          </tr>
+
+          <tr>
+            <td class="quote">"Account Creation (SB &amp; MRL) — New account creation flows"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>Implemented and in active production use.</td>
+            <td>Implemented and operating in production; please clarify only if this requirement was intended to mean a different scope or behavior.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Email validation"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Based on the current wording, it is difficult to determine the exact intended scope of this point, so implementation status cannot be classified reliably without clarification.</td>
+            <td>Please clarify what exactly "Email validation" means here (format check, verification email flow, uniqueness enforcement, error-notification flow, or another scope).</td>
+          </tr>
+          <tr>
+            <td class="quote">"Password rules (IF passwords are kept or moved to passkeys etc)"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ok">Already Implemented</span></div></td>
+            <td>Password rules are implemented. Passkey does not replace or break existing password rules by itself: it is an additional authentication option (faster/passwordless sign-in via biometrics/device), and passkey registration requires one prior standard authenticated login.</td>
+            <td>Implemented with stable production behavior; please clarify only if this requirement was intended to include password-login deprecation or a different scope.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Duplicate detection"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Based on the current wording, it is difficult to determine what exactly should be deduplicated in this point, so implementation status cannot be classified reliably without clarification.</td>
+            <td>Please clarify the exact duplicate scope for this point. If this refers to duplicate emails, current behavior is mostly implemented in UI flows with known exceptions documented in EQU-3061 planning.</td>
+          </tr>
+          <tr>
+            <td class="quote">"Cross-system account consistency"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Based on the current wording, it is difficult to identify the concrete problem, affected entities/fields, and expected target state, so clarification is required before classification or implementation planning.</td>
+            <td>Please define: what specific inconsistency is observed, in which systems/fields it appears, and what exact business outcome is expected after the fix.</td>
+          </tr>
+
+          <tr>
+            <td class="quote">"Deliverables: architecture review, weaknesses, security assessment, best-practice comparison, recommendations, effort, risk, phased plan"</td>
+            <td class="status-cell"><div class="status-wrap"><span class="badge b-ask">Clarification Required</span></div></td>
+            <td>Technical audit outputs already exist (including architecture/security/DB-focused reviews), and ongoing monitoring is in place for newly introduced components. Critical issues are tracked and addressed; uncontrolled growth of new security debt is not allowed by current process.</td>
+            <td>Please define exact in-scope deliverables for EQU-3257 (specific artifacts, depth, and sign-off owners). Without explicit boundaries, this item can grow indefinitely and never reach a clear done state.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head"><h2>14-Day Telemetry Facts</h2></div>
+    <div class="body">
+      <ul>
+        <li><strong>Auth requests:</strong> 581,245 total; 1,771 failed (0.305%).</li>
+        <li><strong>Auth flow breakdown:</strong> SmartLogin 491,045 (0.334%), LoginPage 50,532 (0.172%), ForgotPassword 33,170 (0.124%), ResetPassword 6,492 (0.015%).</li>
+        <li><strong>Payment requests:</strong> 242,613 total; 4,026 failed (1.659%).</li>
+        <li><strong>Token refresh failed events:</strong> 309 in 14 days; in current flow this is typically an expected re-auth condition when refresh token is expired, so treat as trend metric rather than direct production incident on its own.</li>
+        <li><strong>Keyword signal:</strong> "password expired" exceptions = 0, "session expired" exceptions = 0 (14-day window).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head"><h2>Recent Jira Signal (last 14 days, relevant only)</h2></div>
+    <div class="body">
+      <ul>
+        <li><strong>EQU-3295</strong> — Production Bug - SB Login Issue (<strong>Closed</strong>, updated 2026-04-01). Included here only as a recent auth-related Jira signal, not as a broad conclusion for unrelated requirements.</li>
+        <li><strong>EQU-3294</strong> — MRL incorrect redirection to Smart Login after payment (<strong>Ready for release</strong>).</li>
+        <li><strong>EQU-3061</strong> — Duplicate Email & Mobile Prevention (<strong>In Progress</strong>): has multiple completed/planned actions and an explicit phased implementation plan.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="head"><h2>Preliminary Recommended Sequence (Based on Confirmed Facts)</h2></div>
+    <div class="body">
+      <p><strong>Based on already confirmed facts in this story (code, DB, production telemetry, and linked Jira plans), the following sequence is recommended as a preliminary implementation plan.</strong></p>
+      <ol>
+        <li><strong>Critical Priority: Explicit decision from Victoria Lewis to eliminate clear-text password storage.</strong><br>
+          Current state is objectively high-risk: clear-text password data remains populated at scale. This must be formally approved for removal by Victoria Lewis because, while the technical implementation is relatively straightforward, it will significantly change established support login workflows. Code evidence also shows login-as-user/impersonation-related paths that depend on plaintext password data (for example <code>tb_password</code> and <code>cp_password</code> usage in legacy login flows), so once plain-text passwords are removed these scenarios will not work in current form and require a dedicated redesign/re-architecture scope.
+        </li>
+        <li><strong>Create and approve a bounded scope for EQU-3257 deliverables.</strong><br>
+          Freeze concrete outputs (artifacts, owners, sign-off criteria, timeline) to prevent unlimited scope growth.
+        </li>
+        <li><strong>Execute duplicate-account program using existing phased plan references.</strong><br>
+          Use EQU-3061 implementation planning (including implementation-plan discussion in EQU-3061) as the baseline: complete cleanup window logic, user communications, and enforcement checkpoint.
+        </li>
+        <li><strong>Create Jira tasks from the approved phased plan.</strong><br>
+          If Victoria Lewis confirms the EQU-3061 phased plan, create and prioritize the corresponding Jira work items for implementation and tracking.
+        </li>
+        <li><strong>Complete targeted RCA for session/payment disruption scenarios.</strong><br>
+          Use incident-anchored cases only (time/provider/path) and produce fix recommendations with measurable acceptance criteria.
+        </li>
+        <li><strong>Finalize passkey rollout as an additive auth method.</strong><br>
+          Keep it explicitly framed as an additional sign-in method that improves UX/security; do not treat it as automatic replacement of existing password rules.
+        </li>
+        <li><strong>Run controlled security-hardening migration after approval.</strong><br>
+          Execute approved auth-transition and support-workflow updates in controlled phases with rollback checkpoints.
+        </li>
+        <li><strong>Close with measurable post-release verification.</strong><br>
+          Define and track target metrics: auth failure rate, password-reset failure rate, duplicate-account trend, token-refresh error trend, and payment flow stability trend.
+        </li>
+      </ol>
+      <p class="small">Important: the critical password-storage decision should be formally approved first, otherwise downstream scope and timelines remain unstable.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+
+
